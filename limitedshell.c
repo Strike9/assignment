@@ -85,7 +85,8 @@ void init();
 void ls();
 /* df - external command */
 void df();
-
+/* lsb-release - external command */
+void lsb();
 
 /*********************************************************************
  * USER INPUT FUNCTIONS
@@ -131,9 +132,8 @@ void destroyCommand(){
 /*********************************************************************
  * PROMPT AND ERROR FUNCTIONS
  *********************************************************************/
-/**
- *	displays a welcome screen
- */
+//displays a welcome screen
+
 void HomeScreen(){
 
 	printf("\n");
@@ -143,29 +143,26 @@ void HomeScreen(){
         printf("\n\n");
 }
 
-/**
- *	displays a nice prompt for the shell
- */
+// displays a nice prompt for the shell
+
 void L_SHPrompt(){
         printf("LSG_%s | ", getenv("LOGNAME"));
 }
 
-/**
- * tries to execute builtin and then everything else
- */
+// tries to execute builtin and then everything else
+
 void handleUserCommand(){
         if ((checkBuiltInCommands(commandArgv[0])) == 0) {
+		printf("\n");
                 printf("This command is not available in your shell please try again\n");
 		printf("Having trouble ?\n");
 		printf("Enter Help or h \n");
+		printf("\n");
         }
 }
 
-/**
- * built-in commands: exit, cd, dt, ud, pw, ifc, help, h
- * returns 	1 if a built-in command is executed,
- * 			0 otherwise
- */
+// built-in commands: ls,exit,df, cd, dt,lsb, ud, pw, ifc, help, h
+
 int checkBuiltInCommands(){
         if (strcmp("exit", commandArgv[0]) == 0) {
                 exit(EXIT_SUCCESS);
@@ -206,13 +203,16 @@ int checkBuiltInCommands(){
 					df();
 					return 1;
 		}
+		if (strcmp("lsb", commandArgv[0]) == 0) {
+					lsb();
+					return 1;
+		}
         return 0;
 }
 
 
-/*
- * changes current directory
- */
+// Changes current directory
+
 void changeDirectory(){
         if (commandArgv[1] == NULL) {
 	                chdir(getenv("HOME"));
@@ -223,9 +223,8 @@ void changeDirectory(){
         }
 }
 
-/**
- * prints out the internal command date
- */
+// prints out the internal command date
+
 void internalDate() {
 		printf("\n");
 
@@ -240,9 +239,8 @@ void internalDate() {
 		printf("\n");
 }
 
-/**
- * prints out the user details
- */
+// prints out the user details
+
 void userDetails(){
 		printf("\n");
 
@@ -265,30 +263,37 @@ void userDetails(){
 		printf("\n");
 }
 
-/**
- * pwd
- */
+// pwd func
 void pwd() {
 		printf("\n");
 		system("pwd");
 		printf("\n");
 }
 
+
+// ls func
 void ls() {
 		printf("\n");
 		system("ls -a");
 		printf("\n");
 }
 
+// df func
 void df() {
 		printf("\n");
 		system("df");
 		printf("\n");
 }
 
-/**
- * help
- */
+
+//lsb func
+void lsb() {
+		printf("\n");
+		system("lsb-release");
+		printf("\n");
+}
+
+// func
 void help() {
 
 		if (commandArgv[1] != NULL ) {
@@ -322,6 +327,11 @@ void help() {
 				printf("df | Displays the amount of disk spaced used adn is availiable.\n");
 				printf("\n");
 			}
+			else if (strcmp(commandArgv[1], "lsb" ) == 0) {
+				printf("\n");
+				printf("lsb | Displays distribution information.\n");
+				printf("\n");
+			}
 			else if (strcmp(commandArgv[1], "exit" ) == 0){
 				printf("\n");
 				printf("exit | exit L_SH.\n");
@@ -343,15 +353,15 @@ void help() {
 					printf("ifc | Displays the ifconfig of the eth0 by default, you can specify your own interface.\n");
 					printf("ls | Displays the current files in the directory.\n");
 					printf("df | Displays the disk space information.\n");
+					printf("lsb | Displays distribution information. \n");
 					printf("exit | Will exit limitedshell /  L_SH.\n");
 					printf("\n");
 				}
 			}
 }
 
-/**
- * ifconfig
- */
+// ifconfig
+
 void ifconfig() {
 	char command[100];
 	if (commandArgv[1] == NULL) {
@@ -370,9 +380,8 @@ void ifconfig() {
 
 
 
-/**
- * initializes variables and enables job control
- */
+//  initializes variables and enables job control
+
 void init(){
         L_SH_PID = getpid();                                    // retrieve the pid of the shell
         L_SH_TERMINAL = STDIN_FILENO;                           // terminal = STDIN
@@ -382,9 +391,8 @@ void init(){
                 while (tcgetpgrp(L_SH_TERMINAL) != (L_SH_PGID = getpgrp()))
                         kill(L_SH_PID, SIGTTIN);                                                    // make sure we are in the foreground
 
-                /**
-                 * ignore all the job control stop signals and install custom signal handlers
-                 */
+                // ignore all the job control stop signals and install custom signal handlers
+
                 signal(SIGQUIT, SIG_IGN);
                 signal(SIGTTOU, SIG_IGN);
                 signal(SIGTTIN, SIG_IGN);
