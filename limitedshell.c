@@ -81,8 +81,10 @@ void ifconfig();
 void help();
 /* initializes the shell */
 void init();
-/* ls command */
+/* ls - external command */
 void ls();
+/* df - external command */
+void df();
 
 
 /*********************************************************************
@@ -133,8 +135,8 @@ void destroyCommand(){
  *	displays a welcome screen
  */
 void HomeScreen(){
-		
-		printf("\n");
+
+	printf("\n");
         printf("\tWelcome to Your limieed Shell,  %s\n", getenv("LOGNAME"));
         printf("\tThis liminted shell has a process id of |  %d\n", (int) L_SH_PID);
 	printf("\t Please Enter a Command followed by enter.");
@@ -198,6 +200,10 @@ int checkBuiltInCommands(){
 		}
 		if (strcmp("ls", commandArgv[0]) == 0) {
 					ls();
+					return 1;
+		}
+		if (strcmp("df", commandArgv[0]) == 0) {
+					df();
 					return 1;
 		}
         return 0;
@@ -274,6 +280,12 @@ void ls() {
 		printf("\n");
 }
 
+void df() {
+		printf("\n");
+		system("df");
+		printf("\n");
+}
+
 /**
  * help
  */
@@ -300,9 +312,14 @@ void help() {
 				printf("ud | Displays the user details in the format | userID, groupID, username, groupname, iNode of users home directory.\n");
 				printf("\n");
 			}
-			else if (strcmp(commandArgv[1], "ls" ) ==0) {
+			else if (strcmp(commandArgv[1], "ls" ) == 0) {
 				printf("\n");
 				printf("ls | Displays the files in current directory.\n");
+				printf("\n");
+			}
+			else if (strcmp(commandArgv[1], "df" ) == 0){
+				printf("\n");
+				printf("df | Displays the amount of disk spaced used adn is availiable.\n");
 				printf("\n");
 			}
 			else if (strcmp(commandArgv[1], "exit" ) == 0){
@@ -325,6 +342,7 @@ void help() {
 					printf("pw | Displays the current working directory.\n");
 					printf("ifc | Displays the ifconfig of the eth0 by default, you can specify your own interface.\n");
 					printf("ls | Displays the current files in the directory.\n");
+					printf("df | Displays the disk space information.\n");
 					printf("exit | Will exit limitedshell /  L_SH.\n");
 					printf("\n");
 				}
