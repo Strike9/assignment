@@ -159,7 +159,7 @@ void handleUserCommand(){
         }
 }
 
-// built-in commands: ls,exit,df, cd, dt,lsb, ud, pw , ifc, help, h
+// built-in commands: clear, ls,exit,df, cd, dt,lsb, ud, pw , ifc, help, h
 
 int checkBuiltInCommands(){
         if (strcmp("exit", commandArgv[0]) == 0) {
@@ -203,6 +203,10 @@ int checkBuiltInCommands(){
 		}
 		if (strcmp("lsb", commandArgv[0]) == 0) {
 					lsb();
+					return 1;
+		}
+		if (strcmp("clear", commandArgv[0]) == 0) {
+					clear();
 					return 1;
 		}
         return 0;
@@ -337,6 +341,11 @@ void help() {
 				printf("lsb | Displays distribution information.\n");
 				printf("\n");
 			}
+			else if (strcmp(commandArgv[1], "clear" ) == 0) {
+				printf("\n");
+				printf("clear | Clears the screen.\n");
+				printf("\n");
+			}
 			else if (strcmp(commandArgv[1], "exit" ) == 0){
 				printf("\n");
 				printf("exit | exit L_SH.\n");
@@ -358,6 +367,7 @@ void help() {
 					printf("ifc | Displays the ifconfig of the eth0 by default, you can specify your own interface.\n");
 					printf("ls | Displays the current files in the directory.\n");
 					printf("df | Displays the disk space information.\n");
+					printf("clear | clears the screen.\n");
 					printf("lsb | Displays distribution information. \n");
 					printf("exit | Will exit limitedshell /  L_SH.\n");
 					printf("\n");
