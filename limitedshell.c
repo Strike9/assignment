@@ -87,8 +87,6 @@ void ls();
 void df();
 // lsb-release - external command
 void lsb();
-// history - external command
-void his();
 // clear command
 void clear();
 
@@ -161,7 +159,7 @@ void handleUserCommand(){
         }
 }
 
-// built-in commands: ls,exit,df, cd, dt,lsb, ud, pw, history , ifc, help, h
+// built-in commands: ls,exit,df, cd, dt,lsb, ud, pw , ifc, help, h
 
 int checkBuiltInCommands(){
         if (strcmp("exit", commandArgv[0]) == 0) {
@@ -205,10 +203,6 @@ int checkBuiltInCommands(){
 		}
 		if (strcmp("lsb", commandArgv[0]) == 0) {
 					lsb();
-					return 1;
-		}
-		if (strcmp("his", commandArgv[0]) == 0) {
-					his();
 					return 1;
 		}
         return 0;
@@ -293,16 +287,10 @@ void df() {
 //lsb func
 void lsb() {
 		printf("\n");
-		system("lsb-release");
+		system("lsb_release");
 		printf("\n");
 }
 
-//his func
-void his() {
-		printf("\n");
-		system("history");
-		printf("\n");
-}
 
 //clear func
 void clear() {
@@ -349,11 +337,6 @@ void help() {
 				printf("lsb | Displays distribution information.\n");
 				printf("\n");
 			}
-			else if (strcmp(commandArgv[1],  "his" ) == 0) {
-				printf("\n");
-				printf("his | Displays the history of commands.\n");
-				printf("\n");
-			}
 			else if (strcmp(commandArgv[1], "exit" ) == 0){
 				printf("\n");
 				printf("exit | exit L_SH.\n");
@@ -376,7 +359,6 @@ void help() {
 					printf("ls | Displays the current files in the directory.\n");
 					printf("df | Displays the disk space information.\n");
 					printf("lsb | Displays distribution information. \n");
-					printf("his | Displays the command history. \n");
 					printf("exit | Will exit limitedshell /  L_SH.\n");
 					printf("\n");
 				}
