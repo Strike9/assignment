@@ -59,41 +59,44 @@ void L_SHPrompt();
 /*********************************************************************
  * THE SHELL FUNCTIONS
  *********************************************************************/
-/* Checks if command is built in or not */
+// Checks if command is built in or not
 void handleUserCommand();
-/* checks if command is builtin */
+// checks if command is builtin
 int checkBuiltInCommands();
-/* executes the command */
+// executes the command
 void executeCommand(char *command[], char *file, int newDescriptor);
-/* child process created */
+// child process created
 void launchJob(char *command[], char *file, int newDescriptor);
-/* changes the directory */
+// changes the directory
 void changeDirectory();
-/* gets date - internal command */
+// gets date - internal command
 void internalDate();
-/*  used to get user details - internal command */
+//  used to get user details - internal command
 void userDetails();
-/* pwd - external commmand */
+// pwd - external commmand
 void pwd();
-/* ifconfig - external command*/
+// ifconfig - external command
 void ifconfig();
-/* help - internal command */
+// help - internal command
 void help();
-/* initializes the shell */
+// initializes the shell
 void init();
-/* ls - external command */
+// ls - external command
 void ls();
-/* df - external command */
+// df - external command
 void df();
-/* lsb-release - external command */
+// lsb-release - external command
 void lsb();
+// history - external command
+void his();
+// clear command
+void clear();
 
 /*********************************************************************
  * USER INPUT FUNCTIONS
  *********************************************************************/
-/**
- *	gets a line of text from user
- */
+// gets a line of text from user
+
 void getTextLine(){
         destroyCommand();                                                                       // clean buffer and command line
         while ((userInput != '\n') && (bufferChars < BUFFER_MAX_LENGTH)) {
@@ -104,9 +107,8 @@ void getTextLine(){
         populateCommand();
 }
 
-/**
- * space is utilised as a seperator and it populates the array commandArgv
- */
+// space is utilised as a seperator and it populates the array commandArgv
+
 void populateCommand(){
         char* bufferPointer;                                                                  // a pointer to the buffer
         bufferPointer = strtok(buffer, " ");
@@ -117,9 +119,7 @@ void populateCommand(){
         }
 }
 
-/**
- *	destroys the arrays of chars, letting the user to input the next command line
- */
+//destroys the arrays of chars, letting the user to input the next command line
 void destroyCommand(){
         while (cmdArgCount != 0) {
                 commandArgv[cmdArgCount] = NULL;
@@ -139,14 +139,14 @@ void HomeScreen(){
 	printf("\n");
         printf("\tWelcome to Your limieed Shell,  %s\n", getenv("LOGNAME"));
         printf("\tThis liminted shell has a process id of |  %d\n", (int) L_SH_PID);
-	printf("\t Please Enter a Command followed by enter.");
+	printf("\tPlease Enter a Command followed by enter.");
         printf("\n\n");
 }
 
 // displays a nice prompt for the shell
 
 void L_SHPrompt(){
-        printf("LSG_%s | ", getenv("LOGNAME"));
+        printf("LSH_%s | ", getenv("LOGNAME"));
 }
 
 // tries to execute builtin and then everything else
@@ -161,7 +161,7 @@ void handleUserCommand(){
         }
 }
 
-// built-in commands: ls,exit,df, cd, dt,lsb, ud, pw, ifc, help, h
+// built-in commands: ls,exit,df, cd, dt,lsb, ud, pw, history , ifc, help, h
 
 int checkBuiltInCommands(){
         if (strcmp("exit", commandArgv[0]) == 0) {
@@ -205,6 +205,10 @@ int checkBuiltInCommands(){
 		}
 		if (strcmp("lsb", commandArgv[0]) == 0) {
 					lsb();
+					return 1;
+		}
+		if (strcmp("his", commandArgv[0]) == 0) {
+					his();
 					return 1;
 		}
         return 0;
@@ -293,7 +297,20 @@ void lsb() {
 		printf("\n");
 }
 
-// func
+//his func
+void his() {
+		printf("\n");
+		system("history");
+		printf("\n");
+}
+
+//clear func
+void clear() {
+		system("clear");
+}
+
+
+//help func
 void help() {
 
 		if (commandArgv[1] != NULL ) {
@@ -332,6 +349,11 @@ void help() {
 				printf("lsb | Displays distribution information.\n");
 				printf("\n");
 			}
+			else if (strcmp(commandArgv[1],  "his" ) == 0) {
+				printf("\n");
+				printf("his | Displays the history of commands.\n");
+				printf("\n");
+			}
 			else if (strcmp(commandArgv[1], "exit" ) == 0){
 				printf("\n");
 				printf("exit | exit L_SH.\n");
@@ -354,6 +376,7 @@ void help() {
 					printf("ls | Displays the current files in the directory.\n");
 					printf("df | Displays the disk space information.\n");
 					printf("lsb | Displays distribution information. \n");
+					printf("his | Displays the command history. \n");
 					printf("exit | Will exit limitedshell /  L_SH.\n");
 					printf("\n");
 				}
@@ -414,6 +437,7 @@ void init(){
 
 int main(int argc, char **argv, char **envp){
         init();
+	clear();
         HomeScreen();											//display homescreen
         L_SHPrompt();
         while (TRUE) {
